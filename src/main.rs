@@ -69,7 +69,7 @@ fn main() -> Result<(), std::io::Error> {
 
     let base_dir_path = match options.opt_str("d") {
         Some(dir) => dir,
-        _ => "/var/finger".to_string(),
+        _ => "/var/lib/ringer".to_string(),
     };
 
     let base_dir = Dir::open_ambient_dir(base_dir_path, ambient_authority())?;
