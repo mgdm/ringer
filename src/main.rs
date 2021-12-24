@@ -1,11 +1,10 @@
 extern crate cap_std;
 
-use std::env;
-use std::io::{stdin, BufRead, BufReader, Error, Read};
 use cap_std::ambient_authority;
 use cap_std::fs::Dir;
-
 use getopts::{Matches, Options};
+use std::env;
+use std::io::{stdin, BufRead, BufReader, Error, Read};
 
 const MAX_LENGTH: u64 = 128;
 
@@ -28,13 +27,13 @@ fn handle_query(base_dir: &Dir) -> Result<(), Error> {
     let username = query.trim();
 
     if username == "" {
-        println!("Nobody's online.");
+        list_users(base_dir)?;
         return Ok(());
     }
 
     if !valid_query(username) {
         println!("No funny business.");
-       return Ok(());
+        return Ok(());
     }
 
     let content = match base_dir.read_to_string(username) {
@@ -43,6 +42,22 @@ fn handle_query(base_dir: &Dir) -> Result<(), Error> {
     };
 
     println!("{}", content);
+
+    Ok(())
+}
+
+fn list_users(dir: &Dir) -> Result<(), Error> {
+    let paths = dir.entries()?;
+
+    let filenames = paths
+        .filter_map(|e| e.ok())
+        .map(|e| e.file_name().into_string())
+        .filter_map(|e| e.ok())
+        .collect::<Vec<String>>();
+
+    for f in filenames {
+        println!("{}", f);
+    }
 
     Ok(())
 }
