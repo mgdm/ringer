@@ -16,7 +16,7 @@
       in rec {
         packages.ringer = ringer;
 
-        defaultPackage = packages.ringer;
+        packages.default = packages.ringer;
 
         devShell =
           pkgs.mkShell { nativeBuildInputs = with pkgs; [ rustc cargo ]; };
